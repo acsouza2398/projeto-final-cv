@@ -3,6 +3,8 @@ import boto3
 from dotenv import load_dotenv
 import os
 from aws_lambda_powertools import Logger
+# remove for deploy
+from PIL import Image
 
 logger = Logger()
 
@@ -10,8 +12,9 @@ def handler(event, context):
     load_dotenv()
 
     if os.getenv("env") == "LOCAL":
-        buf = event["path"]
-        model = YOLO(f"model/best.pt")
+        img = event["path"]
+        buf = Image.open(img)
+        model = YOLO(f"../model/best.pt")
     else:   
         s3 = boto3.client('s3',
                           region_name=os.getenv('AWS_REGION'),
@@ -19,7 +22,7 @@ def handler(event, context):
                           aws_secret_access_key=os.getenv('AWS_SECRET_ACCESS_KEY'),
                           aws_session_token=os.getenv('AWS_SESSION_TOKEN'))
         bucket = os.getenv("AWS_BUCKET_NAME")
-        
+
         buf = s3.get_object(Bucket=bucket, Key=event["path"])["Body"].read()
         model = YOLO(f"/tmp/weights/best.pt")
 
