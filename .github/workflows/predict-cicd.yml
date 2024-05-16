@@ -1,0 +1,62 @@
+name: Deploy to Amazon ECR and update prediction function
+
+on:
+  push:
+    branches:
+      - master
+    paths:
+      - 'model/**'
+    
+env:
+  IMAGE_TAG: latest
+
+jobs:
+  deploy:
+    name: Deploy nprod
+    runs-on: ubuntu-latest
+    environment: 
+    env:
+      ECR_REPOSITORY: "${{ vars.ECR_REPOSITORY }}"
+      ECR_REGISTRY: "${{ vars.ECR_REGISTRY }}"
+      AWS_REGION: "${{ vars.AWS_REGION }}"
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Update AWS Lambda Environment Variables
+        id: update-lambda-env
+        run: |
+          aws lambda update-function-configuration \
+            --function-name ${{ vars.LAMBDA_FUNCTION }} \
+            --environment "Variables={AWS_BUCKET_NAME=${{ vars.AWS_BUCKET_NAME }}}"
+
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v1
+
+      - name: Build, push and tag Docker image
+        id: build-push-image
+        run: |
+          docker build \
+            --platform linux/amd64 \
+            --tag ${{ env.ECR_REGISTRY }}/${{ env.ECR_REPOSITORY }}:${{ env.IMAGE_TAG }} \
+            ./model/
+          docker tag ${{ env.ECR_REGISTRY }}/${{ env.ECR_REPOSITORY }}:${{ env.IMAGE_TAG }} ${{ env.ECR_REGISTRY }}/${{ env.ECR_REPOSITORY }}:${{ env.IMAGE_TAG }}
+          docker push ${{ env.ECR_REGISTRY }}/${{ env.ECR_REPOSITORY }}:${{ env.IMAGE_TAG }}
+          echo "::set-output name=image::${{ env.ECR_REGISTRY }}/${{ env.ECR_REPOSITORY }}:${{ env.IMAGE_TAG }}"
+
+      - name: Update AWS Lambda function with new container image
+        id: update-lambda
+        env:
+          IMAGE_URI: ${{ steps.build-push-image.outputs.image }}
+        run: |
+          aws lambda update-function-code \
+            --function-name ${{ vars.LAMBDA_FUNCTION }} \
+            --image-uri ${{ env.IMAGE_URI }} \
