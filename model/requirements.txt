@@ -1,0 +1,4 @@
+ultralytics
+boto3
+dotenv
+aws_lambda_powertools
