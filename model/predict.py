@@ -1,7 +1,7 @@
-from ultralytics import YOLO
-import boto3
-from dotenv import load_dotenv
 import os
+import boto3
+from ultralytics import YOLO
+from dotenv import load_dotenv
 from aws_lambda_powertools import Logger
 
 logger = Logger()
