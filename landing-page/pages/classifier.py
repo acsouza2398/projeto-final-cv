@@ -2,6 +2,7 @@ import streamlit as st
 import boto3
 from dotenv import load_dotenv
 import os
+import io
 from PIL import Image
 import base64
 from pathlib import Path
@@ -54,10 +55,12 @@ class Classifier():
                         for i in range(len(image)):
                             with cols[i]:
                                 img = Image.open(image[i])
+                                b = io.BytesIO()
+                                img.save(b, format=f"{image[i].type.split('/')[1]}" )
                                 new_image = img.resize((150, 100))
                                 st.image(new_image)
                                 self.load_s3()
-                                self.s3.put_object(Key=f"{image[i].name}", Body=image[i].read(), Bucket=os.getenv('AWS_BUCKET_NAME'))
+                                self.s3.put_object(Key=f"{image[i].name}", Body=b.getvalue(), Bucket=os.getenv('AWS_BUCKET_NAME'))
                                 result = response["body"]
                                 response = {legend[k]: v for k, v in result.items()}
                                 response = sorted(response.items(), key=lambda x: x[1], reverse=True)
