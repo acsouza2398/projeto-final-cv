@@ -48,7 +48,7 @@ class Classifier():
 
             if classify_button:
                 if image != []:
-                    with st.spinner('Classificando...'):
+                    with st.spinner('Classificando... Hee Ho!'):
                         cols = st.columns(len(image))
 
                         for i in range(len(image)):
