@@ -1,4 +1,4 @@
 ultralytics
 boto3
-dotenv
+python-dotenv
 aws_lambda_powertools
