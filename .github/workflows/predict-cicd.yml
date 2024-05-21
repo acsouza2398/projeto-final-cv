@@ -14,7 +14,7 @@ jobs:
   deploy:
     name: Deploy nprod
     runs-on: ubuntu-latest
-    environment: 
+    environment: demon_classifier
     env:
       ECR_REPOSITORY: "${{ vars.ECR_REPOSITORY }}"
       ECR_REGISTRY: "${{ vars.ECR_REGISTRY }}"
@@ -30,12 +30,12 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ env.AWS_REGION }}
 
-      - name: Update AWS Lambda Environment Variables
-        id: update-lambda-env
-        run: |
-          aws lambda update-function-configuration \
-            --function-name ${{ vars.LAMBDA_FUNCTION }} \
-            --environment "Variables={AWS_BUCKET_NAME=${{ vars.AWS_BUCKET_NAME }}}"
+      # - name: Update AWS Lambda Environment Variables
+      #   id: update-lambda-env
+      #   run: |
+      #     aws lambda update-function-configuration \
+      #       --function-name ${{ vars.LAMBDA_FUNCTION }} \
+      #       --environment "Variables={AWS_BUCKET_NAME=${{ vars.AWS_BUCKET_NAME }}}"
 
       - name: Login to Amazon ECR
         id: login-ecr
@@ -52,11 +52,11 @@ jobs:
           docker push ${{ env.ECR_REGISTRY }}/${{ env.ECR_REPOSITORY }}:${{ env.IMAGE_TAG }}
           echo "::set-output name=image::${{ env.ECR_REGISTRY }}/${{ env.ECR_REPOSITORY }}:${{ env.IMAGE_TAG }}"
 
-      - name: Update AWS Lambda function with new container image
-        id: update-lambda
-        env:
-          IMAGE_URI: ${{ steps.build-push-image.outputs.image }}
-        run: |
-          aws lambda update-function-code \
-            --function-name ${{ vars.LAMBDA_FUNCTION }} \
-            --image-uri ${{ env.IMAGE_URI }} \
+      # - name: Update AWS Lambda function with new container image
+      #   id: update-lambda
+      #   env:
+      #     IMAGE_URI: ${{ steps.build-push-image.outputs.image }}
+      #   run: |
+      #     aws lambda update-function-code \
+      #       --function-name ${{ vars.LAMBDA_FUNCTION }} \
+      #       --image-uri ${{ env.IMAGE_URI }} \

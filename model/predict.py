@@ -24,7 +24,7 @@ def handler(event, context):
         bucket = os.getenv("AWS_BUCKET_NAME")
 
         buf = s3.get_object(Bucket=bucket, Key=event["path"])["Body"].read()
-        model = YOLO(f"/tmp/weights/best.pt")
+        model = YOLO(f"best.pt")
 
     results = model.predict(buf)
     result = results[0]
