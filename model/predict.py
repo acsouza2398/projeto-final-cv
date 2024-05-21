@@ -12,8 +12,7 @@ def handler(event, context):
     s3 = boto3.client('s3',
                         region_name=os.getenv('AWS_REGION'),
                         aws_access_key_id=os.getenv('AWS_ACCESS_KEY_ID'),
-                        aws_secret_access_key=os.getenv('AWS_SECRET_ACCESS_KEY'),
-                        aws_session_token=os.getenv('AWS_SESSION_TOKEN'))
+                        aws_secret_access_key=os.getenv('AWS_SECRET_ACCESS_KEY'))
     bucket = os.getenv("AWS_BUCKET_NAME")
 
     buf = s3.get_object(Bucket=bucket, Key=event["path"])["Body"].read()

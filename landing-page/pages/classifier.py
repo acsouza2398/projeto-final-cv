@@ -5,7 +5,7 @@ import os
 from PIL import Image
 
 legend = {"jack_frost": "Jack Frost", "pixie": "Pixie", "decarabia": "Decarabia"}   
-images_dict = {"Jack Frost": "../img/Jack_Frost_sprite_small.png", "Pixie": "../img/Pixie_sprite.png", "Decarabia": "../img/Decarabia_sprite.png"}
+images_dict = {"Jack Frost": "img/Jack_Frost_sprite_small.png", "Pixie": "img/Pixie_sprite.png", "Decarabia": "img/Decarabia_sprite.png"}
 
 class Classifier():
     def __init__(self):
@@ -18,8 +18,7 @@ class Classifier():
         self.s3 = boto3.client('s3',
                                region_name=os.getenv('AWS_REGION'),
                                aws_access_key_id=os.getenv('AWS_ACCESS_KEY_ID'),
-                               aws_secret_access_key=os.getenv('AWS_SECRET_ACCESS_KEY'),
-                               aws_session_token=os.getenv('AWS_SESSION_TOKEN'))
+                               aws_secret_access_key=os.getenv('AWS_SECRET_ACCESS_KEY'))
         
         self.bucket = os.getenv("AWS_BUCKET_NAME")
         self.env = None
