@@ -29,3 +29,4 @@ def handler(event, context):
 if __name__ == "__main__":
     event = {"path": "model/example/jack_1.jpg"}
     print(handler(event, None))
+    
