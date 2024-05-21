@@ -1,2 +1,5 @@
 streamlit
 boto3
+ultralytics
+python-dotenv
+aws_lambda_powertools
