@@ -1,11 +1,18 @@
 import streamlit as st
 from PIL import Image
+import base64
+from pathlib import Path
 import sys
 sys.path.append('..')
 from model.predict import handler
 
 legend = {"jack_frost": "Jack Frost", "pixie": "Pixie", "decarabia": "Decarabia"}   
-images_dict = {"Jack Frost": "img/Jack_Frost_sprite_small.png", "Pixie": "img/Pixie_sprite.png", "Decarabia": "img/Decarabia_sprite.png"}
+images_dict = {"Jack Frost": "img/Jack_Frost_sprite_small.png", "Pixie": "img/Pixie_sprite_small.png", "Decarabia": "img/Decarabia_sprite_small.png"}
+
+def img_to_bytes(img_path):
+    img_bytes = Path(img_path).read_bytes()
+    encoded = base64.b64encode(img_bytes).decode()
+    return encoded
 
 class Classifier():
     def __init__(self):
@@ -41,7 +48,7 @@ class Classifier():
                                 response = sorted(response.items(), key=lambda x: x[1], reverse=True)
                                 for k, v in response:
                                     sprite = images_dict[k]
-                                    st.markdown(f"![{k}]({sprite}) {v*100:.2f}%", unsafe_allow_html=True)
+                                    st.markdown(f"<img src='data:image/png;base64,{img_to_bytes(sprite)}' class='img-fluid'> {k}: {v*100:.2f}%", unsafe_allow_html=True)
                                     #st.write(f"{k}: {v*100:.2f}%")
 
                 else:
