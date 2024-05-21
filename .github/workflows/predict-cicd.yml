@@ -12,7 +12,7 @@ env:
 
 jobs:
   deploy:
-    name: Deploy nprod
+    name: Deploy to Amazon ECR and update prediction function
     runs-on: ubuntu-latest
     environment: demon_classifier
     env:
