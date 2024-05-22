@@ -7,6 +7,8 @@ from aws_lambda_powertools import Logger
 logger = Logger()
 
 def handler(event, context):
+    logger.info(event)
+
     load_dotenv()
   
     s3 = boto3.client('s3',
