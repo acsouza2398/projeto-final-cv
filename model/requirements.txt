@@ -2,3 +2,5 @@ ultralytics
 boto3
 python-dotenv
 aws_lambda_powertools
+opencv-python-headless==4.8.1.78
+opencv-contrib-python==4.8.1.78
