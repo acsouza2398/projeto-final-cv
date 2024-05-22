@@ -8,6 +8,7 @@ logger = Logger()
 
 def handler(event, context):
     logger.info(event)
+    print(event)
 
     load_dotenv()
   
