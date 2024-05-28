@@ -2,6 +2,7 @@ import streamlit as st
 import requests
 from dotenv import load_dotenv
 import os
+import io
 from PIL import Image
 import base64
 from pathlib import Path
@@ -45,15 +46,22 @@ class Classifier():
                                 new_image = img.resize((150, 100))
                                 st.image(new_image)
 
-                                image_base64 = base64.b64encode(image[i].read()).decode()
+                                buffered = io.BytesIO()
+                                img.save(buffered, format=image[i].type.split('/')[1])
+                                image_base64 = base64.b64encode(buffered.getvalue()).decode('utf-8')
 
                                 payload = {'image_data': image_base64}
+                                print(payload)
                                 response = requests.post(self.api_url, json=payload)
+
+                                print(response.json())
+                                print(response.status_code)
 
                                 if response.status_code == 200:
                                     result = response.json()
                                     predictions = result["predictions"]
-                                    response = {legend[pred['name']]: pred['confidence'] for pred in predictions}
+                                    print(f"Predictions: {predictions}")
+                                    response = {legend[k]: v for k, v in predictions.items()}
                                     response = sorted(response.items(), key=lambda x: x[1], reverse=True)
                                     for k, v in response:
                                         sprite = images_dict[k]
