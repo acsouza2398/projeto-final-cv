@@ -1,8 +1,7 @@
 import streamlit as st
-import boto3
+import requests
 from dotenv import load_dotenv
 import os
-import io
 from PIL import Image
 import base64
 from pathlib import Path
@@ -18,20 +17,8 @@ def img_to_bytes(img_path):
 class Classifier():
     def __init__(self):
         load_dotenv()
-        self.s3 = None
-        self.bucket = None
         self.env = os.getenv("env")
-
-    def load_s3(self):
-        self.s3 = boto3.client('s3',
-                               region_name=os.getenv('AWS_REGION'),
-                               aws_access_key_id=os.getenv('AWS_ACCESS_KEY_ID'),
-                               aws_secret_access_key=os.getenv('AWS_SECRET_ACCESS_KEY'))
-        
-        self.bucket = os.getenv("AWS_BUCKET_NAME")
-        self.env = None
-
-        return
+        self.api_url = os.getenv("API_URL")
 
     def run(self):
         st.title('Classificador de Demônios de Persona e Shin Megami Tensei')
@@ -55,18 +42,24 @@ class Classifier():
                         for i in range(len(image)):
                             with cols[i]:
                                 img = Image.open(image[i])
-                                b = io.BytesIO()
-                                img.save(b, format=f"{image[i].type.split('/')[1]}" )
                                 new_image = img.resize((150, 100))
                                 st.image(new_image)
-                                self.load_s3()
-                                self.s3.put_object(Key=f"{image[i].name}", Body=b.getvalue(), Bucket=os.getenv('AWS_BUCKET_NAME'))
-                                result = response["body"]
-                                response = {legend[k]: v for k, v in result.items()}
-                                response = sorted(response.items(), key=lambda x: x[1], reverse=True)
-                                for k, v in response:
-                                    sprite = images_dict[k]
-                                    st.markdown(f"<img src='data:image/png;base64,{img_to_bytes(sprite)}' class='img-fluid'> {k}: {v*100:.2f}%", unsafe_allow_html=True)
+
+                                image_base64 = base64.b64encode(image[i].read()).decode()
+
+                                payload = {'image_data': image_base64}
+                                response = requests.post(self.api_url, json=payload)
+
+                                if response.status_code == 200:
+                                    result = response.json()
+                                    predictions = result["predictions"]
+                                    response = {legend[pred['name']]: pred['confidence'] for pred in predictions}
+                                    response = sorted(response.items(), key=lambda x: x[1], reverse=True)
+                                    for k, v in response:
+                                        sprite = images_dict[k]
+                                        st.markdown(f"<img src='data:image/png;base64,{img_to_bytes(sprite)}' class='img-fluid'> {k}: {v*100:.2f}%", unsafe_allow_html=True)
+                                else:
+                                    st.error('Erro ao classificar a imagem.')
 
                 else:
                     st.write('Por favor, faça o upload de uma imagem antes de clicar em "Classificar"')
