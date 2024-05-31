@@ -18,8 +18,7 @@ def img_to_bytes(img_path):
 class Classifier():
     def __init__(self):
         load_dotenv()
-        self.env = os.getenv("env")
-        self.api_url = os.getenv("API_URL")
+        self.api_url = st.secrets["api_url"]
 
     def start(self):
         img = Image.open("img/heehoo.png")
