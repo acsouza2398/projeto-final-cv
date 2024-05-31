@@ -8,7 +8,7 @@ import base64
 from pathlib import Path
 
 legend = {"jack_frost": "Jack Frost", "pixie": "Pixie", "decarabia": "Decarabia", "angel": "Angel"}   
-images_dict = {"Jack Frost": "landing-page/img/Jack_Frost_sprite_small.png", "Pixie": "landing-page/img/Pixie_sprite_small.png", "Decarabia": "landing-page/img/Decarabia_sprite_small.png", "Angel": "landing-page/img/Angel_sprite_small.png"}
+images_dict = {"Jack Frost": "img/Jack_Frost_sprite_small.png", "Pixie": "img/Pixie_sprite_small.png", "Decarabia": "img/Decarabia_sprite_small.png", "Angel": "img/Angel_sprite_small.png"}
 
 def img_to_bytes(img_path):
     img_bytes = Path(img_path).read_bytes()
@@ -22,7 +22,7 @@ class Classifier():
         self.api_url = os.getenv("API_URL")
 
     def start(self):
-        img = Image.open("landing-page/img/heehoo.png")
+        img = Image.open("img/heehoo.png")
         buffered = io.BytesIO()
         img.save(buffered, format="png")
         image_base64 = base64.b64encode(buffered.getvalue()).decode('utf-8')
