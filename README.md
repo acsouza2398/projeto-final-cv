@@ -13,7 +13,7 @@ O deploy do projeto foi feito utilizando o Streamlit.
 
 ## Treinamento do modelo
 
-O dataset foi hospedado no [Roboflow](https://universe.roboflow.com/smtdemondetector/demon_detector) e o modelo foi treinado no [Google Colab](https://colab.research.google.com/drive/1FWDfEBsI7dR26mJxGjhKuGngC_9dqxii?usp=sharing) usando modelos do YOLOv8 da Ultralytics. O modelo resultante foi salvo na pasta `model` com o nome `best.pt`.
+O dataset foi hospedado no [Roboflow](https://universe.roboflow.com/smtdemondetector/demon_detector) e o modelo foi treinado no [Google Colab](https://colab.research.google.com/drive/1ZPf64Aa-1DtQG0JBNu2LUhT-K_MyqvlH?usp=sharing) usando modelos do YOLOv8 da Ultralytics. O modelo resultante foi salvo na pasta `model` com o nome `best.pt`.
 
 ## Deployment
 
