@@ -21,7 +21,17 @@ class Classifier():
         self.env = os.getenv("env")
         self.api_url = os.getenv("API_URL")
 
+    def start(self):
+        img = Image.open("img/heehoo.png")
+        buffered = io.BytesIO()
+        img.save(buffered, format="png")
+        image_base64 = base64.b64encode(buffered.getvalue()).decode('utf-8')
+
+        payload = {'image_data': image_base64}
+        response = requests.post(self.api_url, json=payload)
+
     def run(self):
+        self.start()
         st.title('Classificador de Demônios de Persona e Shin Megami Tensei')
 
         st.write('Este é um classificador de demônios de Persona e Shin Megami Tensei. Ele foi treinado para identificar Pixie, Jack Frost e Decarabia')
@@ -47,11 +57,11 @@ class Classifier():
                                 st.image(new_image)
 
                                 buffered = io.BytesIO()
+                                print(image[i].type.split('/')[1])
                                 img.save(buffered, format=image[i].type.split('/')[1])
                                 image_base64 = base64.b64encode(buffered.getvalue()).decode('utf-8')
 
                                 payload = {'image_data': image_base64}
-                                print(payload)
                                 response = requests.post(self.api_url, json=payload)
 
                                 print(response.json())
