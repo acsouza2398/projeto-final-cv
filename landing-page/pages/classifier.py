@@ -6,8 +6,8 @@ import sys
 sys.path.append('..')
 from model.predict import handler
 
-legend = {"jack_frost": "Jack Frost", "pixie": "Pixie", "decarabia": "Decarabia"}   
-images_dict = {"Jack Frost": "img/Jack_Frost_sprite_small.png", "Pixie": "img/Pixie_sprite_small.png", "Decarabia": "img/Decarabia_sprite_small.png"}
+legend = {"jack_frost": "Jack Frost", "pixie": "Pixie", "decarabia": "Decarabia", "angel": "Angel"}   
+images_dict = {"Jack Frost": "img/Jack_Frost_sprite_small.png", "Pixie": "img/Pixie_sprite_small.png", "Decarabia": "img/Decarabia_sprite_small.png", "Angel": "img/Angel_sprite_small.png"	}
 
 def img_to_bytes(img_path):
     img_bytes = Path(img_path).read_bytes()
@@ -34,7 +34,7 @@ class Classifier():
 
             if classify_button:
                 if image != []:
-                    with st.spinner('Classificando...'):
+                    with st.spinner('Classificando... Hee Ho!'):
                         cols = st.columns(len(image))
 
                         for i in range(len(image)):
@@ -49,7 +49,6 @@ class Classifier():
                                 for k, v in response:
                                     sprite = images_dict[k]
                                     st.markdown(f"<img src='data:image/png;base64,{img_to_bytes(sprite)}' class='img-fluid'> {k}: {v*100:.2f}%", unsafe_allow_html=True)
-                                    #st.write(f"{k}: {v*100:.2f}%")
 
                 else:
                     st.write('Por favor, faça o upload de uma imagem antes de clicar em "Classificar"')
