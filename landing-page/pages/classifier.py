@@ -7,8 +7,8 @@ from PIL import Image
 import base64
 from pathlib import Path
 
-legend = {"jack_frost": "Jack Frost", "pixie": "Pixie", "decarabia": "Decarabia"}   
-images_dict = {"Jack Frost": "img/Jack_Frost_sprite_small.png", "Pixie": "img/Pixie_sprite.png", "Decarabia": "img/Decarabia_sprite.png"}
+legend = {"jack_frost": "Jack Frost", "pixie": "Pixie", "decarabia": "Decarabia", "angel": "Angel"}   
+images_dict = {"Jack Frost": "img/Jack_Frost_sprite_small.png", "Pixie": "img/Pixie_sprite_small.png", "Decarabia": "img/Decarabia_sprite_small.png", "Angel": "img/Angel_sprite_small.png"}
 
 def img_to_bytes(img_path):
     img_bytes = Path(img_path).read_bytes()

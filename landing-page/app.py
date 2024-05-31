@@ -12,7 +12,7 @@ class App:
         logo_url = "img/heehoo.png"
         st.sidebar.image(logo_url)
         st.sidebar.title('Classificador de Demônios')
-        st.sidebar.markdown('Demônios suportados: <br> - Pixie <br> - Jack Frost <br> - Decarabia', unsafe_allow_html=True)
+        st.sidebar.markdown('Demônios suportados: <br> - Pixie <br> - Jack Frost <br> - Decarabia <br> - Angel', unsafe_allow_html=True)
         self.pages['Classifier']().run()
 
 app = App()
