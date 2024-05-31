@@ -9,7 +9,7 @@ class App:
 
     def run(self):
         st.markdown("<style> ul {display: none;} </style>", unsafe_allow_html=True)
-        logo_url = "img/heehoo.png"
+        logo_url = "landing-page/img/heehoo.png"
         st.sidebar.image(logo_url)
         st.sidebar.title('Classificador de Demônios')
         st.sidebar.markdown('Demônios suportados: <br> - Pixie <br> - Jack Frost <br> - Decarabia <br> - Angel', unsafe_allow_html=True)
